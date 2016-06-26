@@ -81,31 +81,6 @@ namespace Filters
         {
             return CompFilter.Magnitude * (Math.Sin(Freaquence * time + CompFilter.Phase));
         }
-
     }
-
-    //Клас для роботи із комплексними числами
-    //public class Complex
-    //{
-    //    public double Im { get; set; }
-    //    public double Re { get; set; }
-
-    //    //Модуль комплексного числа
-    //    public double ComAbs()
-    //    {
-            
-    //        return Math.Sqrt(Math.Pow(Im, 2) + Math.Pow(Re, 2));;
-    //    }
-
-    //    //Кут комплексного числа
-    //    public double ComAngle()
-    //    {
-    //        return Math.Acos(Re / ComAbs());
-    //    }
-
-    //    public override string ToString()
-    //    {
-    //        return "" + Re + "+" + Im + "j";
-    //    }
-    }
+}
 
