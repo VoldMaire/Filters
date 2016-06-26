@@ -1,0 +1,6 @@
+E:\Projects\Filters\Filters\bin\Debug\Filters.exe.config
+E:\Projects\Filters\Filters\bin\Debug\Filters.exe
+E:\Projects\Filters\Filters\bin\Debug\Filters.pdb
+E:\Projects\Filters\Filters\obj\Debug\Filters.csprojResolveAssemblyReference.cache
+E:\Projects\Filters\Filters\obj\Debug\Filters.exe
+E:\Projects\Filters\Filters\obj\Debug\Filters.pdb
