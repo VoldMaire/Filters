@@ -18,7 +18,7 @@ namespace Filters
             //Console.WriteLine(num.Magnitude);
             //Console.WriteLine(num.Phase);
             Console.WriteLine(Math.Sin(30*Math.PI/180));
-            Filters polosovoy = new Filters(5.0, 0.005, 20.0, 0.8, 600.0);
+            Filters polosovoy = new Filters(2.0, 0.0005, 20.0, 3, 1000.0);
             Console.WriteLine("magn: " + polosovoy.CompFilter.Magnitude + " Re: " + polosovoy.CompFilter.Real + " Im: " + polosovoy.CompFilter.Imaginary);
             Complex x = Complex.Divide(new Complex(-2,1), new Complex(1,-1));
             Console.WriteLine("Divide result: " + x.Real + " + j" + x.Imaginary);
@@ -27,16 +27,28 @@ namespace Filters
                 Console.WriteLine(polosovoy.GetUout(i));
             }
             double timer = 0.0;
-            string path = @"e:\temp\MyTest.txt";
-            if (File.Exists(path))
+            string pathpolos = @"e:\temp\Polosovoy.txt";
+            string pathzag = @"e:\temp\Zagraditelniy.txt";
+            string pathfnch = @"e:\temp\FNch.txt";
+            string pathfvch = @"e:\temp\FVch.txt";
+            if (File.Exists(pathpolos))
             {
-                StreamWriter sw = new StreamWriter(path);
+                StreamWriter swp = new StreamWriter(pathpolos);
+                StreamWriter swz = new StreamWriter(pathzag);
+                StreamWriter swN = new StreamWriter(pathfnch);
+                StreamWriter swV = new StreamWriter(pathfvch);
                     for (int i = 0; i < 100; i++)
                     {
-                        sw.WriteLine(polosovoy.GetUout(timer));
+                        swp.WriteLine(polosovoy.GetUout(timer));
+                        swz.WriteLine(polosovoy.GetUoutZag(timer));
+                        swN.WriteLine(polosovoy.GetUoutFnch(timer));
+                        swV.WriteLine(polosovoy.GetUoutFvch(timer));
                         timer += 0.01;
                     }  
-                sw.Close();
+                swp.Close();
+                swz.Close();
+                swV.Close();
+                swN.Close();
             }
 
             Console.ReadKey();
@@ -70,7 +82,26 @@ namespace Filters
                 Complex divisor = new Complex(3, Freaquence*Resistor*Capacitor - 1/(Freaquence*Resistor*Capacitor));
                 return  Complex.Divide(CompVoltage,divisor);
             }
-        }        
+        }
+
+        public Complex CompFNCH
+        {
+            get
+            {
+                Complex multipl = new Complex(1/Math.Pow(1+Freaquence*Resistor*Capacitor,2), Freaquence*Resistor*Capacitor/(1+Math.Pow(Freaquence*Resistor*Capacitor,2)));
+                return Complex.Multiply(CompVoltage, multipl);
+            }
+        }
+
+        public Complex CompFVCH
+        {
+            get
+            {
+                Complex multipl = new Complex(Math.Pow(Freaquence*Resistor*Capacitor,2)/(1+Math.Pow(Freaquence*Resistor*Capacitor,2)), Freaquence*Resistor*Capacitor/(1+Math.Pow(Freaquence*Resistor*Capacitor,2)));
+                return Complex.Multiply(CompVoltage, multipl);
+            }
+        }
+
 
         public Filters(double res, double cap, double uMagn, double uPhase, double frequence)
         {
@@ -84,6 +115,21 @@ namespace Filters
         public double GetUout(double time)//функція для виводу миттєвого значення
         {
             return CompFilter.Magnitude * (Math.Sin(Freaquence * time + CompFilter.Phase));
+        }
+
+        public double GetUoutFnch(double time)
+        {
+            return CompFNCH.Magnitude * (Math.Sin(Freaquence * time + CompFNCH.Phase));
+        }
+
+        public double GetUoutFvch(double time)
+        {
+            return CompFVCH.Magnitude * (Math.Sin(Freaquence * time + CompFVCH.Phase));
+        }
+
+        public double GetUoutZag(double time)
+        {
+            return UenterMagnitude * (Math.Sin(Freaquence * time + UenterPhase)) * (1 - Math.Pow(Freaquence * Resistor * Capacitor, 2)) / (Math.Sqrt(Math.Pow(1 - Math.Pow(Freaquence * Resistor * Capacitor, 2), 2) + 16 * Math.Pow(Freaquence * Resistor * Capacitor, 2)));
         }
     }
 }
